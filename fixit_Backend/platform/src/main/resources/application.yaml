@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: platform
+
+  datasource:
+    url : jdbc:postgresql://localhost:5432/fixit_db
+    username: postgres
+    password: psql1234
+
+  jpa:
+    hibernate:
+      ddl-auto:  update
+    show-sql: true
+    properties:
+      hibernate :
+        dialect: org.hibernate.dialect.PostgreSQLDialect
