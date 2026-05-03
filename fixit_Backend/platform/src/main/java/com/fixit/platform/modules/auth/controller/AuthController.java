@@ -1,5 +1,6 @@
 package com.fixit.platform.modules.auth.controller;
 
+import com.fixit.platform.modules.auth.dto.LoginRequest;
 import com.fixit.platform.modules.auth.dto.RegisterRequest;
 import com.fixit.platform.modules.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -22,5 +23,13 @@ public class AuthController {
         authService.register(request);
 
         return ResponseEntity.ok("User registered successfully");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+
+        String token = authService.login(request);
+
+        return ResponseEntity.ok(token);
     }
 }
