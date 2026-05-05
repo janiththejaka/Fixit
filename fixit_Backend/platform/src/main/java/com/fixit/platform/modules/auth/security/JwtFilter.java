@@ -5,6 +5,8 @@ import com.fixit.platform.modules.auth.service.JwtService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,6 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
 
             if (jwtService.isTokenValid(token)) {
+
                 String email = jwtService.extractEmail(token);
 
                 CustomUserDetails userDetails = new CustomUserDetails(email);
