@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -24,26 +26,23 @@ public class AuthService {
     private final AuthRoleRepository roleRepository;
     private final AuthUserRoleRepository userRoleRepository;
 
-    public void register(RegisterRequest request) {
-
-        // Check if email already exists
-        userRepository.findByEmail(request.getEmail())
-                .ifPresent(user -> {
-                    throw new RuntimeException("Email already exists");
-                });
-
-        // Create user
-        User user = new User();
-        user.setEmail(request.getEmail());
-
-        //  Hash password
-        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-
-        userRepository.save(user);
-    }
-
-
-
+//    public void register(RegisterRequest request) {
+//
+//        // Check if email already exists
+//        userRepository.findByEmail(request.getEmail())
+//                .ifPresent(user -> {
+//                    throw new RuntimeException("Email already exists");
+//                });
+//
+//        // Create user
+//        User user = new User();
+//        user.setEmail(request.getEmail());
+//
+//        //  Hash password
+//        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+//
+//        userRepository.save(user);
+//    }
 
 
     public void registerClient(ClientRegisterRequest request) {
@@ -103,6 +102,12 @@ public class AuthService {
             throw new RuntimeException("Invalid password");
         }
 
-        return jwtService.generateToken(user.getEmail());
+        List<AuthUserRole> userRoles = userRoleRepository.findByUserId(user.getId());
+
+        List<String> roles = userRoles.stream()
+                .map(ur -> roleRepository.findById(ur.getRoleId()).orElseThrow().getName())
+                .toList();
+
+        return jwtService.generateToken(user.getEmail(), roles);
     }
 }
