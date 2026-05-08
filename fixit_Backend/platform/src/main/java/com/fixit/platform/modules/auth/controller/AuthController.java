@@ -43,11 +43,7 @@ public class AuthController {
         return "Only providers can see this";
     }
 
-    @GetMapping("/client-only")
-    @PreAuthorize("hasRole('CLIENT')")
-    public String clientOnly() {
-        return "Only client can see this";
-    }
+
 
 
 
