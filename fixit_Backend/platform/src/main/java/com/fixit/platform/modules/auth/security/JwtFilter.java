@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -36,19 +37,19 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 String email = jwtService.extractEmail(token);
 
-                CustomUserDetails userDetails = new CustomUserDetails(email);
-
                 List<String> roles = jwtService.extractRoles(token);
 
                 List<SimpleGrantedAuthority> authorities = roles.stream()
                         .map(SimpleGrantedAuthority::new)
-                        .toList();
+                        .collect(Collectors.toList());
+
+                CustomUserDetails userDetails = new CustomUserDetails(email, authorities);
 
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null,
-                                authorities
+                                userDetails.getAuthorities()
                         );
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

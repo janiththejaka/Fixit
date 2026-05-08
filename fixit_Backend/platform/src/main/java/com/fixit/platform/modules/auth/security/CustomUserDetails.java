@@ -10,13 +10,16 @@ public class CustomUserDetails implements UserDetails {
 
     private final String email;
 
-    public CustomUserDetails(String email) {
+    private final Collection<? extends GrantedAuthority> authorities;
+
+    public CustomUserDetails(String email, Collection<? extends GrantedAuthority> authorities) {
         this.email = email;
+        this.authorities = authorities;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // roles later
+        return authorities;
     }
 
     @Override
