@@ -1,5 +1,8 @@
 package com.fixit.platform.modules.auth.service;
 
+import com.fixit.platform.common.exception.EmailAlreadyExistsException;
+import com.fixit.platform.common.exception.InvalidCredentialsException;
+import com.fixit.platform.common.response.ApiResponse;
 import com.fixit.platform.modules.auth.dto.ClientRegisterRequest;
 import com.fixit.platform.modules.auth.dto.LoginRequest;
 import com.fixit.platform.modules.auth.dto.ProviderRegisterRequest;
@@ -45,12 +48,12 @@ public class AuthService {
 //    }
 
 
-    public void registerClient(ClientRegisterRequest request) {
+    public ApiResponse<String> registerClient(ClientRegisterRequest request) {
 
         // Check if email already exists
         userRepository.findByEmail(request.getEmail())
                 .ifPresent(user -> {
-                    throw new RuntimeException("Email already exists");
+                    throw new EmailAlreadyExistsException("Email already exists");
                 });
 
         User user = new User();
@@ -67,9 +70,15 @@ public class AuthService {
         userRole.setRoleId(role.getId());
 
         userRoleRepository.save(userRole);
+
+        return new ApiResponse<>(
+                true,
+                "Client registered successfully",
+                null
+        );
     }
 
-    public void registerProvider(ProviderRegisterRequest request) {
+    public ApiResponse<String> registerProvider(ProviderRegisterRequest request) {
 
         User user = new User();
         user.setEmail(request.email);
@@ -85,6 +94,12 @@ public class AuthService {
         userRole.setRoleId(role.getId());
 
         userRoleRepository.save(userRole);
+
+        return new ApiResponse<>(
+                true,
+                "Provider registered successfully",
+                null
+        );
     }
 
 
@@ -92,14 +107,14 @@ public class AuthService {
 
 
 
-    public String login(LoginRequest request) {
+    public ApiResponse<String> login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // check password
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new RuntimeException("Invalid password");
+            throw new InvalidCredentialsException("Invalid password");
         }
 
         List<AuthUserRole> userRoles = userRoleRepository.findByUserId(user.getId());
@@ -108,6 +123,12 @@ public class AuthService {
                 .map(ur -> roleRepository.findById(ur.getRoleId()).orElseThrow().getName())
                 .toList();
 
-        return jwtService.generateToken(user.getEmail(), roles);
+        String token = jwtService.generateToken(user.getEmail(), roles);
+
+        return new ApiResponse<>(
+                true,
+                "Login successful",
+                token
+        );
     }
 }
