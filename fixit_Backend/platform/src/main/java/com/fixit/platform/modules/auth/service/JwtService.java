@@ -1,6 +1,7 @@
 package com.fixit.platform.modules.auth.service;
 
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.security.Keys;
@@ -13,9 +14,14 @@ import java.util.List;
 @Service
 public class JwtService {
 
-    private final Key SECRET_KEY =
-            Keys.hmacShaKeyFor(Base64.getDecoder().decode("AzuoRrtS7H5u4dJK/LKhODI7TXs9NfqX+SAN48EEcLo=")); // later move to env
+    @Value("${jwt.secret}")
+    private String secretKey;
 
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(
+                Base64.getDecoder().decode(secretKey)
+        );
+    }
     public String generateToken(String email, List<String> roles) {
 
         return Jwts.builder()
@@ -23,14 +29,14 @@ public class JwtService {
                 .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
-                .signWith(SECRET_KEY)
+                .signWith(getSigningKey())
                 .compact();
     }
 
     public List<String> extractRoles(String token) {
 
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -49,7 +55,7 @@ public class JwtService {
 
     public String extractEmail(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -61,7 +67,7 @@ public class JwtService {
         try {
 
             Jwts.parserBuilder()
-                    .setSigningKey(SECRET_KEY)
+                    .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token);
 
