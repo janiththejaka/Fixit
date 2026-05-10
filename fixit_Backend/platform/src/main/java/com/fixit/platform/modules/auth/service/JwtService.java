@@ -1,8 +1,6 @@
 package com.fixit.platform.modules.auth.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.security.Keys;
@@ -59,10 +57,23 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token) {
+
         try {
-            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+
+            Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token);
+
             return true;
-        } catch (Exception e) {
-            return false;
+
+        } catch (ExpiredJwtException e) {
+
+            throw new RuntimeException("Token expired");
+
+        } catch (JwtException e) {
+
+            throw new RuntimeException("Invalid token");
         }
-    }}
+    }
+}
