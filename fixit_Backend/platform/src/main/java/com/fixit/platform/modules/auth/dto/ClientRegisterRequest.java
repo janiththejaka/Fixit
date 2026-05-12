@@ -10,6 +10,9 @@ import lombok.Setter;
 @Setter
 public class ClientRegisterRequest {
 
+    @NotBlank(message = "Full name is required")
+    private String fullName;
+
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email is required")
     public String email;
