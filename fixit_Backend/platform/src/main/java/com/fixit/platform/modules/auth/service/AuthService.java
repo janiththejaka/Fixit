@@ -13,6 +13,7 @@ import com.fixit.platform.modules.auth.entity.User;
 import com.fixit.platform.modules.auth.repository.AuthRoleRepository;
 import com.fixit.platform.modules.auth.repository.AuthUserRoleRepository;
 import com.fixit.platform.modules.auth.repository.UserRepository;
+import com.fixit.platform.modules.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthRoleRepository roleRepository;
     private final AuthUserRoleRepository userRoleRepository;
+    private final ProfileService profileService;
 
 //    public void register(RegisterRequest request) {
 //
@@ -71,6 +73,11 @@ public class AuthService {
 
         userRoleRepository.save(userRole);
 
+        profileService.createBasicProfile(
+                user.getId(),
+                request.getFullName()
+        );
+
         return new ApiResponse<>(
                 true,
                 "Client registered successfully",
@@ -94,6 +101,11 @@ public class AuthService {
         userRole.setRoleId(role.getId());
 
         userRoleRepository.save(userRole);
+
+        profileService.createBasicProfile(
+                user.getId(),
+                request.getFullName()
+        );
 
         return new ApiResponse<>(
                 true,
