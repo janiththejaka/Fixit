@@ -43,6 +43,12 @@ public class Profile {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "experience_years")
+    private Integer experienceYears;
+
+    @Column(name = "provider_description")
+    private String providerDescription;
+
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();

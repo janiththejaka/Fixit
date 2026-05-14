@@ -19,6 +19,5 @@ public class ProfileResponse {
     private String profileImageUrl;
     private boolean providerProfileComplete;
 
-    public void setId(UUID id) {
-    }
+
 }
