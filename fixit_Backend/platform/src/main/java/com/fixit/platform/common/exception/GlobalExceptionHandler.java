@@ -1,6 +1,7 @@
 package com.fixit.platform.common.exception;
 
 import com.fixit.platform.common.response.ApiResponse;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,6 +47,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .badRequest()
                 .body(response);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<String>> handleAccessDeniedException(
+            AccessDeniedException ex
+    ) {
+
+        ApiResponse<String> response = new ApiResponse<>(
+                false,
+                "Forbidden",
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     @ExceptionHandler(Exception.class)

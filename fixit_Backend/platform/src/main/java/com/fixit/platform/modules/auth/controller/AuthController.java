@@ -37,20 +37,6 @@ public class AuthController {
         ApiResponse<String> response = authService.registerProvider(request);
         return ResponseEntity.ok(response);
     }
-
-
-    @GetMapping("/provider-only")
-    @PreAuthorize("hasRole('PROVIDER')")
-    public String providerOnly() {
-        return "Only providers can see this";
-    }
-
-
-
-
-
-
-
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<String>> login(@RequestBody LoginRequest request) {
 
