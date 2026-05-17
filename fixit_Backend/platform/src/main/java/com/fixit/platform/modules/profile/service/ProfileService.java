@@ -2,6 +2,7 @@ package com.fixit.platform.modules.profile.service;
 
 import com.fixit.platform.modules.profile.dto.CompleteProviderProfileRequest;
 import com.fixit.platform.modules.profile.dto.ProfileResponse;
+import com.fixit.platform.modules.profile.dto.SkillResponse;
 import com.fixit.platform.modules.profile.dto.UpdateProfileRequest;
 import com.fixit.platform.modules.profile.entity.Profile;
 import com.fixit.platform.modules.profile.entity.ProviderSkill;
@@ -116,5 +117,22 @@ public class ProfileService {
         profile.setProviderProfileComplete(true);
 
         profileRepository.save(profile);
+    }
+
+    public List<SkillResponse> getAllSkills() {
+
+        List<Skill> skills = skillRepository.findAll();
+
+        return skills.stream().map(skill -> {
+
+            SkillResponse response = new SkillResponse();
+
+            response.setId(skill.getId());
+            response.setName(skill.getName());
+            response.setSlug(skill.getSlug());
+
+            return response;
+
+        }).toList();
     }
 }
