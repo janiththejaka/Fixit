@@ -27,7 +27,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Only public auth endpoints (login & register) are permit-all
                         .requestMatchers(
-                                "/api/auth/**"
+                                "/api/auth/**",
+                                "/api/skills/**"
                         ).permitAll()
                         // Everything else requires authentication;
                         // role checks are handled by @PreAuthorize on individual methods
