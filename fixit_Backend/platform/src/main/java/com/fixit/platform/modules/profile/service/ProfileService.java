@@ -1,9 +1,6 @@
 package com.fixit.platform.modules.profile.service;
 
-import com.fixit.platform.modules.profile.dto.CompleteProviderProfileRequest;
-import com.fixit.platform.modules.profile.dto.ProfileResponse;
-import com.fixit.platform.modules.profile.dto.SkillResponse;
-import com.fixit.platform.modules.profile.dto.UpdateProfileRequest;
+import com.fixit.platform.modules.profile.dto.*;
 import com.fixit.platform.modules.profile.entity.Profile;
 import com.fixit.platform.modules.profile.entity.ProviderSkill;
 import com.fixit.platform.modules.profile.entity.Skill;
@@ -130,6 +127,41 @@ public class ProfileService {
             response.setId(skill.getId());
             response.setName(skill.getName());
             response.setSlug(skill.getSlug());
+
+            return response;
+
+        }).toList();
+    }
+
+
+    public List<ProviderCardResponse> getProviders() {
+
+        List<Profile> providers =
+                profileRepository.findByProviderProfileCompleteTrue();
+
+        return providers.stream().map(profile -> {
+
+            ProviderCardResponse response =
+                    new ProviderCardResponse();
+
+            response.setProfileId(profile.getId());
+            response.setFullName(profile.getFullName());
+            response.setLocation(profile.getLocation());
+            response.setProviderDescription(
+                    profile.getProviderDescription()
+            );
+            response.setExperienceYears(
+                    profile.getExperienceYears()
+            );
+
+            List<String> skillNames =
+                    providerSkillRepository
+                            .findByProfileId(profile.getId())
+                            .stream()
+                            .map(ps -> ps.getSkill().getName())
+                            .toList();
+
+            response.setSkills(skillNames);
 
             return response;
 
