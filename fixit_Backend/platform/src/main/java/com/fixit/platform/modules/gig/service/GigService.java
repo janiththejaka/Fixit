@@ -9,6 +9,7 @@ import com.fixit.platform.modules.gig.repository.GigRepository;
 import com.fixit.platform.modules.profile.entity.Profile;
 import com.fixit.platform.modules.profile.entity.Skill;
 import com.fixit.platform.modules.profile.repository.ProfileRepository;
+import com.fixit.platform.modules.profile.repository.ProviderSkillRepository;
 import com.fixit.platform.modules.profile.repository.SkillRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ public class GigService {
     private final ProfileRepository profileRepository;
     private final SkillRepository skillRepository;
     private final UserRepository authUserRepository;
+    private final ProviderSkillRepository providerSkillRepository;
 
     public ApiResponse<String> createGig(
             Authentication authentication,
@@ -49,6 +51,19 @@ public class GigService {
             );
         }
 
+
+        boolean providerHasSkill =
+                providerSkillRepository
+                        .existsByProfileIdAndSkillId(
+                                profile.getId(),
+                                request.getSkillId()
+                        );
+
+        if (!providerHasSkill) {
+            throw new RuntimeException(
+                    "Skill not assigned to provider"
+            );
+        }
         Skill skill = skillRepository
                 .findById(request.getSkillId())
                 .orElseThrow(() ->
