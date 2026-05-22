@@ -4,6 +4,7 @@ import com.fixit.platform.common.response.ApiResponse;
 import com.fixit.platform.modules.auth.entity.User;
 import com.fixit.platform.modules.auth.repository.UserRepository;
 import com.fixit.platform.modules.gig.dto.CreateGigRequest;
+import com.fixit.platform.modules.gig.dto.GigCardResponse;
 import com.fixit.platform.modules.gig.entity.Gig;
 import com.fixit.platform.modules.gig.repository.GigRepository;
 import com.fixit.platform.modules.profile.entity.Profile;
@@ -14,6 +15,8 @@ import com.fixit.platform.modules.profile.repository.SkillRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -85,5 +88,11 @@ public class GigService {
                 "Gig created successfully",
                 null
         );
+    }
+
+    public List<GigCardResponse> getPublicGigs() {
+
+        return gigRepository.findPublicGigCards();
+
     }
 }
