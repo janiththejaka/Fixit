@@ -2,11 +2,14 @@ package com.fixit.platform.modules.gig.controller;
 
 import com.fixit.platform.common.response.ApiResponse;
 import com.fixit.platform.modules.gig.dto.CreateGigRequest;
+import com.fixit.platform.modules.gig.dto.GigCardResponse;
 import com.fixit.platform.modules.gig.service.GigService;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/gigs")
@@ -26,6 +29,13 @@ public class GigController {
     ) {
 
         return gigService.createGig(authentication, request);
+
+    }
+
+    @GetMapping
+    public List<GigCardResponse> getPublicGigs() {
+
+        return gigService.getPublicGigs();
 
     }
 }
