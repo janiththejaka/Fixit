@@ -10,8 +10,7 @@ import java.util.UUID;
 
 public interface GigRepository extends JpaRepository<Gig, UUID> {
 
-    List<Gig> findByActiveTrue();
-
+    List<Gig> findByProfileId(UUID profileId);
     @Query("""
         SELECT new com.fixit.platform.modules.gig.dto.GigCardResponse(
             g.id,
