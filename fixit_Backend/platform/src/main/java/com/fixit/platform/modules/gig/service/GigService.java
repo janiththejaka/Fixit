@@ -5,6 +5,7 @@ import com.fixit.platform.modules.auth.entity.User;
 import com.fixit.platform.modules.auth.repository.UserRepository;
 import com.fixit.platform.modules.gig.dto.CreateGigRequest;
 import com.fixit.platform.modules.gig.dto.GigCardResponse;
+import com.fixit.platform.modules.gig.dto.ProviderGigResponse;
 import com.fixit.platform.modules.gig.entity.Gig;
 import com.fixit.platform.modules.gig.repository.GigRepository;
 import com.fixit.platform.modules.profile.entity.Profile;
@@ -94,5 +95,51 @@ public class GigService {
 
         return gigRepository.findPublicGigCards();
 
+    }
+
+    public List<ProviderGigResponse> getMyGigs(
+            Authentication authentication
+    ) {
+
+        String email = authentication.getName();
+
+        User user = authUserRepository
+                .findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found")
+                );
+
+        Profile profile = profileRepository
+                .findByUserId(user.getId())
+                .orElseThrow(() ->
+                        new RuntimeException("Profile not found")
+                );
+
+        List<Gig> gigs =
+                gigRepository.findByProfileId(profile.getId());
+
+        return gigs.stream().map(gig -> {
+
+            ProviderGigResponse response =
+                    new ProviderGigResponse();
+
+            response.setId(gig.getId());
+            response.setTitle(gig.getTitle());
+            response.setDescription(gig.getDescription());
+            response.setPrice(gig.getPrice());
+            response.setImageUrl(gig.getImageUrl());
+            response.setActive(gig.isActive());
+
+            response.setSkillName(
+                    gig.getSkill().getName()
+            );
+
+            response.setCreatedAt(
+                    gig.getCreatedAt()
+            );
+
+            return response;
+
+        }).toList();
     }
 }
