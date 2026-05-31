@@ -171,4 +171,94 @@ public class ProfileService {
 
         }).toList();
     }
+
+    // Additional skill adding and deleting logics
+
+    public void addProviderSkill(
+            UUID userId,
+            UUID skillId
+    ){
+        Profile profile = profileRepository.findByUserId(userId)
+                .orElseThrow(() ->
+                        new RuntimeException("Profile not found"));
+
+        Skill skill = skillRepository.findById(skillId)
+                .orElseThrow(() ->
+                        new RuntimeException("Skill not found"));
+
+        boolean alreadyAssigned =
+                providerSkillRepository
+                        .existsByProfileIdAndSkillId(
+                                profile.getId(),
+                                skillId
+                        );
+
+        if (alreadyAssigned) {
+            throw new RuntimeException(
+                    "Skill already assigned"
+            );
+        }
+
+        ProviderSkill providerSkill =
+                new ProviderSkill();
+
+        providerSkill.setProfileId(profile.getId());
+        providerSkill.setSkill(skill);
+
+        providerSkillRepository.save(providerSkill);
+    }
+
+    public List<ProviderSkillResponse> getProviderSkills(UUID userId)
+    {
+        Profile profile = profileRepository.findByUserId(userId)
+                .orElseThrow(() ->
+                        new RuntimeException("Profile not found"));
+
+        return providerSkillRepository
+                .findByProfileId(profile.getId())
+                .stream()
+                .map(ps -> new ProviderSkillResponse(
+                        ps.getSkill().getId(),
+                        ps.getSkill().getName(),
+                        ps.getSkill().getSlug()
+                ))
+                .toList();
+    }
+
+    public void removeProviderSkill(UUID userId, UUID skillId)
+    {
+        Profile profile = profileRepository.findByUserId(userId)
+                .orElseThrow(() ->
+                        new RuntimeException("Profile not found"));
+
+        List<ProviderSkill> skills =
+                providerSkillRepository.findByProfileId(
+                        profile.getId()
+                );
+
+        if (skills.size() <= 1) {
+            throw new RuntimeException(
+                    "Provider must have at least one skill"
+            );
+        }
+
+        boolean exists =
+                providerSkillRepository
+                        .existsByProfileIdAndSkillId(
+                                profile.getId(),
+                                skillId
+                        );
+
+        if (!exists) {
+            throw new RuntimeException(
+                    "Skill not assigned to provider"
+            );
+        }
+
+        providerSkillRepository
+                .deleteByProfileIdAndSkillId(
+                        profile.getId(),
+                        skillId
+                );
+    }
 }

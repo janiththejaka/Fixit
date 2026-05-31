@@ -8,7 +8,13 @@ import java.util.UUID;
 
 public interface ProviderSkillRepository extends JpaRepository<ProviderSkill, UUID> {
     List<ProviderSkill> findByProfileId(UUID profileId);
+
     boolean existsByProfileIdAndSkillId(
+            UUID profileId,
+            UUID skillId
+    );
+
+    void deleteByProfileIdAndSkillId(
             UUID profileId,
             UUID skillId
     );
