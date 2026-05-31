@@ -13,6 +13,11 @@ import com.fixit.platform.modules.auth.entity.User;
 import com.fixit.platform.modules.auth.repository.AuthRoleRepository;
 import com.fixit.platform.modules.auth.repository.AuthUserRoleRepository;
 import com.fixit.platform.modules.auth.repository.UserRepository;
+import com.fixit.platform.modules.profile.entity.Profile;
+import com.fixit.platform.modules.profile.entity.ProviderSkill;
+import com.fixit.platform.modules.profile.entity.Skill;
+import com.fixit.platform.modules.profile.repository.ProviderSkillRepository;
+import com.fixit.platform.modules.profile.repository.SkillRepository;
 import com.fixit.platform.modules.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +35,8 @@ public class AuthService {
     private final AuthRoleRepository roleRepository;
     private final AuthUserRoleRepository userRoleRepository;
     private final ProfileService profileService;
+    private final SkillRepository skillRepository;
+    private final ProviderSkillRepository providerSkillRepository;
 
 //    public void register(RegisterRequest request) {
 //
@@ -102,9 +109,29 @@ public class AuthService {
 
         userRoleRepository.save(userRole);
 
-        profileService.createBasicProfile(
-                user.getId(),
-                request.getFullName()
+        Profile profile =
+                profileService.createBasicProfile(
+                        user.getId(),
+                        request.getFullName()
+                );
+
+        Skill skill = skillRepository.findById(
+                request.getPrimarySkillId()
+        ).orElseThrow(
+                () -> new RuntimeException("Skill not found")
+        );
+
+        ProviderSkill providerSkill =
+                new ProviderSkill();
+
+        providerSkill.setProfileId(
+                profile.getId()
+        );
+
+        providerSkill.setSkill(skill);
+
+        providerSkillRepository.save(
+                providerSkill
         );
 
         return new ApiResponse<>(
