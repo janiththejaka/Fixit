@@ -8,7 +8,6 @@ import com.fixit.platform.modules.profile.repository.ProfileRepository;
 import com.fixit.platform.modules.profile.repository.ProviderSkillRepository;
 import com.fixit.platform.modules.profile.repository.SkillRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,14 +22,14 @@ public class ProfileService {
     private final ProviderSkillRepository providerSkillRepository;
 
 
-    public void createBasicProfile(UUID userId, String fullName) {
+    public Profile createBasicProfile(UUID userId, String fullName) {
 
         Profile profile = new Profile();
 
         profile.setUserId(userId);
         profile.setFullName(fullName);
 
-        profileRepository.save(profile);
+        return profileRepository.save(profile);
     }
 
     public ProfileResponse getMyProfile(UUID userId) {
@@ -80,6 +79,27 @@ public class ProfileService {
         return response;
     }
 
+
+    //helper method for provider completion check
+    private boolean isProviderProfileComplete(
+            Profile profile
+    ) {
+
+        boolean hasSkill = !providerSkillRepository.findByProfileId(profile.getId()).isEmpty();
+
+        return profile.getFullName() != null
+                && !profile.getFullName().isBlank()
+                && profile.getPhoneNumber() != null
+                && !profile.getPhoneNumber().isBlank()
+                && profile.getLocation() != null
+                && !profile.getLocation().isBlank()
+                && profile.getProviderDescription() != null
+                && !profile.getProviderDescription().isBlank()
+                && profile.getExperienceYears() != null
+                && hasSkill;
+    }
+
+
     public void completeProviderProfile(
             UUID userId,
             CompleteProviderProfileRequest request
@@ -89,29 +109,13 @@ public class ProfileService {
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
 
         // update provider fields
+        profile.setPhoneNumber(request.getPhoneNumber());
+        profile.setLocation(request.getLocation());
         profile.setProviderDescription(request.getProviderDescription());
         profile.setExperienceYears(request.getExperienceYears());
 
-        // fetch skills
-        List<Skill> skills = skillRepository.findByIdIn(request.getSkillIds());
-
-        if (skills.size() != request.getSkillIds().size()) {
-            throw new RuntimeException("Invalid skill selection");
-        }
-
-        // save provider skills
-        for (Skill skill : skills) {
-
-            ProviderSkill providerSkill = new ProviderSkill();
-
-            providerSkill.setProfileId(profile.getId());
-            providerSkill.setSkill(skill);
-
-            providerSkillRepository.save(providerSkill);
-        }
-
         // mark completed
-        profile.setProviderProfileComplete(true);
+        profile.setProviderProfileComplete(isProviderProfileComplete(profile));
 
         profileRepository.save(profile);
     }

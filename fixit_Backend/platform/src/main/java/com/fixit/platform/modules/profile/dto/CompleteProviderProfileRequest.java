@@ -12,6 +12,12 @@ import java.util.UUID;
 public class CompleteProviderProfileRequest {
 
     @NotBlank
+    private String phoneNumber;
+
+    @NotBlank
+    private String location;
+
+    @NotBlank
     @Size(max = 1000)
     private String providerDescription;
 
@@ -20,8 +26,6 @@ public class CompleteProviderProfileRequest {
     @Max(60)
     private Integer experienceYears;
 
-    @NotEmpty
-    private List<UUID> skillIds;
 
 
 }
