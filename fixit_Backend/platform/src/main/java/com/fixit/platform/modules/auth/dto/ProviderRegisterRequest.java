@@ -1,10 +1,10 @@
 package com.fixit.platform.modules.auth.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,4 +19,7 @@ public class ProviderRegisterRequest {
 
     @Size(min = 4, message = "Password must be at least 6 characters")
     public String password;
+
+    @NotNull(message = "Primary skill required")
+    public UUID primarySkillId;
 }
