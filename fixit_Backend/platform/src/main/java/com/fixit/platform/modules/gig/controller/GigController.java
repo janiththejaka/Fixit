@@ -42,9 +42,8 @@ public class GigController {
 
     @PreAuthorize("hasRole('PROVIDER')")
     @GetMapping("/me")
-    public List<ProviderGigResponse> getMyGigs(
-            Authentication authentication
-    ) {
+    public List<ProviderGigResponse> getMyGigs(Authentication authentication)
+    {
 
         return gigService.getMyGigs(authentication);
 
