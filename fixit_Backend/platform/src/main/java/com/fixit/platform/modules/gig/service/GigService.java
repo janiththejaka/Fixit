@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -141,5 +142,32 @@ public class GigService {
             return response;
 
         }).toList();
+    }
+
+    public void toggleGigStatus(
+            UUID userId,
+            UUID gigId
+    ) {
+
+        Profile profile = profileRepository
+                .findByUserId(userId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Profile not found"
+                        ));
+
+        Gig gig = gigRepository
+                .findByIdAndProfileId(
+                        gigId,
+                        profile.getId()
+                )
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Gig not found"
+                        ));
+
+        gig.setActive(!gig.isActive());
+
+        gigRepository.save(gig);
     }
 }

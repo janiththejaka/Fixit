@@ -6,6 +6,7 @@ import com.fixit.platform.modules.gig.dto.GigCardResponse;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface GigRepository extends JpaRepository<Gig, UUID> {
@@ -28,4 +29,6 @@ public interface GigRepository extends JpaRepository<Gig, UUID> {
         WHERE g.active = true
     """)
     List<GigCardResponse> findPublicGigCards();
+
+    Optional<Gig> findByIdAndProfileId(UUID id, UUID profileId);
 }
