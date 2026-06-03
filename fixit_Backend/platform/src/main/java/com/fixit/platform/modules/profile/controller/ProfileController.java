@@ -40,7 +40,7 @@ public class ProfileController {
         return profileService.getMyProfile(user.getId());
     }
 
-    @PutMapping("/me")
+    @PatchMapping("/me")
     public ProfileResponse updateMyProfile(
             Authentication authentication,
             @Valid @RequestBody UpdateProfileRequest request
@@ -70,6 +70,8 @@ public class ProfileController {
 
         return "Provider profile completed";
     }
+
+
 
 
     @GetMapping("/providers")

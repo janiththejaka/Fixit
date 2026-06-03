@@ -58,11 +58,37 @@ public class ProfileService {
         Profile profile = profileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
 
-        profile.setFullName(request.getFullName());
-        profile.setPhoneNumber(request.getPhoneNumber());
-        profile.setLocation(request.getLocation());
-        profile.setBio(request.getBio());
-        profile.setProfileImageUrl(request.getProfileImageUrl());
+        if (request.getFullName() != null) {
+            profile.setFullName(request.getFullName());
+        }
+
+        if (request.getPhoneNumber() != null) {
+            profile.setPhoneNumber(request.getPhoneNumber());
+        }
+
+        if (request.getLocation() != null) {
+            profile.setLocation(request.getLocation());
+        }
+
+        if (request.getBio() != null) {
+            profile.setBio(request.getBio());
+        }
+
+        if (request.getProfileImageUrl() != null) {
+            profile.setProfileImageUrl(request.getProfileImageUrl());
+        }
+
+        if (
+                request.getFullName() == null &&
+                        request.getPhoneNumber() == null &&
+                        request.getLocation() == null &&
+                        request.getBio() == null &&
+                        request.getProfileImageUrl() == null
+        ) {
+            throw new RuntimeException(
+                    "No fields provided for update"
+            );
+        }
 
         Profile updatedProfile = profileRepository.save(profile);
 
