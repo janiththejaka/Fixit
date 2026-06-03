@@ -6,6 +6,7 @@ import com.fixit.platform.modules.auth.repository.UserRepository;
 import com.fixit.platform.modules.gig.dto.CreateGigRequest;
 import com.fixit.platform.modules.gig.dto.GigCardResponse;
 import com.fixit.platform.modules.gig.dto.ProviderGigResponse;
+import com.fixit.platform.modules.gig.dto.UpdateGigRequest;
 import com.fixit.platform.modules.gig.entity.Gig;
 import com.fixit.platform.modules.gig.repository.GigRepository;
 import com.fixit.platform.modules.profile.entity.Profile;
@@ -17,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -167,6 +169,64 @@ public class GigService {
                         ));
 
         gig.setActive(!gig.isActive());
+
+        gigRepository.save(gig);
+    }
+
+    public void updateGig(UUID userId, UUID gigId, UpdateGigRequest request){
+        Profile profile = profileRepository
+                .findByUserId(userId)
+                .orElseThrow(() ->
+                        new RuntimeException("Profile not found"));
+
+        Gig gig = gigRepository
+                .findByIdAndProfileId(
+                        gigId,
+                        profile.getId()
+                )
+                .orElseThrow(() ->
+                        new RuntimeException("Gig not found"));
+
+        if (request.getSkillId() != null) {
+
+            boolean providerHasSkill =
+                    providerSkillRepository
+                            .existsByProfileIdAndSkillId(
+                                    profile.getId(),
+                                    request.getSkillId()
+                            );
+
+            if (!providerHasSkill) {
+                throw new RuntimeException(
+                        "Skill not assigned to provider"
+                );
+            }
+
+            Skill skill = skillRepository
+                    .findById(request.getSkillId())
+                    .orElseThrow(() ->
+                            new RuntimeException("Skill not found"));
+
+            gig.setSkill(skill);
+        }
+
+        if (request.getTitle() != null) {
+            gig.setTitle(request.getTitle());
+        }
+
+        if (request.getDescription() != null) {
+            gig.setDescription(request.getDescription());
+        }
+
+        if (request.getPrice() != null) {
+            gig.setPrice(request.getPrice());
+        }
+
+        if (request.getImageUrl() != null) {
+            gig.setImageUrl(request.getImageUrl());
+        }
+
+        gig.setUpdatedAt(LocalDateTime.now());
 
         gigRepository.save(gig);
     }
