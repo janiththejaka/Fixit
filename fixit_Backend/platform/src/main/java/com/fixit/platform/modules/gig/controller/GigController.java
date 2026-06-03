@@ -6,6 +6,7 @@ import com.fixit.platform.modules.auth.repository.UserRepository;
 import com.fixit.platform.modules.gig.dto.CreateGigRequest;
 import com.fixit.platform.modules.gig.dto.GigCardResponse;
 import com.fixit.platform.modules.gig.dto.ProviderGigResponse;
+import com.fixit.platform.modules.gig.dto.UpdateGigRequest;
 import com.fixit.platform.modules.gig.repository.GigRepository;
 import com.fixit.platform.modules.gig.service.GigService;
 import jakarta.validation.Valid;
@@ -77,5 +78,29 @@ public class GigController {
         );
 
         return "Gig status updated";
+    }
+
+    @PatchMapping("/update/{gigId}")
+    @PreAuthorize("hasRole('PROVIDER')")
+    public String updateGig(
+            Authentication authentication,
+            @PathVariable UUID gigId,
+            @Valid @RequestBody UpdateGigRequest request
+    ) {
+
+        String email = authentication.getName();
+
+        User user = userRepository
+                .findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        gigService.updateGig(
+                user.getId(),
+                gigId,
+                request
+        );
+
+        return "Gig updated successfully";
     }
 }
