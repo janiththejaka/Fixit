@@ -230,4 +230,21 @@ public class GigService {
 
         gigRepository.save(gig);
     }
+
+    public void deleteGig(UUID userId, UUID gigId) {
+        Profile profile = profileRepository
+                .findByUserId(userId)
+                .orElseThrow(() ->
+                        new RuntimeException("Profile not found"));
+
+        Gig gig = gigRepository
+                .findByIdAndProfileId(
+                        gigId,
+                        profile.getId()
+                )
+                .orElseThrow(() ->
+                        new RuntimeException("Gig not found"));
+
+        gigRepository.delete(gig);
+    }
 }
