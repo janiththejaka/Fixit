@@ -31,4 +31,5 @@ public interface GigRepository extends JpaRepository<Gig, UUID> {
     List<GigCardResponse> findPublicGigCards();
 
     Optional<Gig> findByIdAndProfileId(UUID id, UUID profileId);
+    List<Gig> findByProfileIdAndActiveTrue(UUID profileId);
 }

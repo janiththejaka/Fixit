@@ -7,6 +7,10 @@ import com.fixit.platform.modules.profile.entity.Skill;
 import com.fixit.platform.modules.profile.repository.ProfileRepository;
 import com.fixit.platform.modules.profile.repository.ProviderSkillRepository;
 import com.fixit.platform.modules.profile.repository.SkillRepository;
+import com.fixit.platform.modules.gig.dto.GigCardResponse;
+import com.fixit.platform.modules.gig.repository.GigRepository;
+
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final SkillRepository skillRepository;
     private final ProviderSkillRepository providerSkillRepository;
+    private final GigRepository gigRepository;
 
 
     public Profile createBasicProfile(UUID userId, String fullName) {
@@ -287,4 +292,76 @@ public class ProfileService {
                         skillId
                 );
     }
+
+    public ProviderDetailResponse getProviderDetails(
+            UUID profileId
+    ){
+        Profile profile = profileRepository
+                .findById(profileId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Provider not found"
+                        ));
+
+        if (!profile.isProviderProfileComplete()) {
+            throw new RuntimeException(
+                    "Provider not available"
+            );
+        }
+
+        List<String> skills =
+                providerSkillRepository
+                        .findByProfileId(profileId)
+                        .stream()
+                        .map(ps -> ps.getSkill().getName())
+                        .toList();
+
+        List<GigCardResponse> gigs =
+                gigRepository
+                        .findByProfileIdAndActiveTrue(
+                                profileId
+                        )
+                        .stream()
+                        .map(gig -> {
+
+                            GigCardResponse response =
+                                    new GigCardResponse();
+
+                            response.setGigId(gig.getId());
+                            response.setTitle(gig.getTitle());
+                            response.setDescription(
+                                    gig.getDescription()
+                            );
+                            response.setPrice(gig.getPrice());
+                            response.setImageUrl(
+                                    gig.getImageUrl()
+                            );
+
+                            return response;
+
+                        })
+                        .toList();
+
+        ProviderDetailResponse response = new ProviderDetailResponse();
+
+        response.setProfileId(profile.getId());
+        response.setFullName(profile.getFullName());
+        response.setLocation(profile.getLocation());
+        response.setProviderDescription(
+                profile.getProviderDescription()
+        );
+        response.setExperienceYears(
+                profile.getExperienceYears()
+        );
+        response.setProfileImageUrl(
+                profile.getProfileImageUrl()
+        );
+
+        response.setSkills(skills);
+        response.setGigs(gigs);
+
+        return response;
+    }
+
+
 }

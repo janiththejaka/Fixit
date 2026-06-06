@@ -30,7 +30,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/skills/**",
-                                "/api/profile/providers"
+                                "/api/profile/providers",
+                                "/api/profile/providers/{ptofileId}"
+
                         ).permitAll()
                         .requestMatchers(
                                 HttpMethod.GET,
