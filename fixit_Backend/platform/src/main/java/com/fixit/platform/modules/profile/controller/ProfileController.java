@@ -78,10 +78,22 @@ public class ProfileController {
     }
 
 
-
-
     @GetMapping("/providers")
     public List<ProviderCardResponse> getProviders() {
         return profileService.getProviders();
     }
+
+    @GetMapping("/providers/search")
+    public List<ProviderCardResponse> searchProviders(
+            @RequestParam(required = false) UUID skillId,
+            @RequestParam(required = false) String location
+    ) {
+
+        return profileService.searchProviders(
+                skillId,
+                location
+        );
+    }
 }
+
+

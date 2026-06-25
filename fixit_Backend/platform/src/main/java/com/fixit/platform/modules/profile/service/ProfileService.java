@@ -347,9 +347,7 @@ public class ProfileService {
         response.setProfileId(profile.getId());
         response.setFullName(profile.getFullName());
         response.setLocation(profile.getLocation());
-        response.setProviderDescription(
-                profile.getProviderDescription()
-        );
+        response.setProviderDescription(profile.getProviderDescription());
         response.setExperienceYears(
                 profile.getExperienceYears()
         );
@@ -361,6 +359,35 @@ public class ProfileService {
         response.setGigs(gigs);
 
         return response;
+    }
+
+    public List<ProviderCardResponse> searchProviders(
+            UUID skillId,
+            String location
+    ){List<Profile> providers = profileRepository.searchProviders(skillId, location);
+
+        return providers.stream().map(profile -> {
+
+            ProviderCardResponse response = new ProviderCardResponse();
+
+            response.setProfileId(profile.getId());
+            response.setFullName(profile.getFullName());
+            response.setLocation(profile.getLocation());
+            response.setProviderDescription(profile.getProviderDescription());
+            response.setExperienceYears(profile.getExperienceYears());
+
+            List<String> skillNames =
+                    providerSkillRepository
+                            .findByProfileId(profile.getId())
+                            .stream()
+                            .map(ps -> ps.getSkill().getName())
+                            .toList();
+
+            response.setSkills(skillNames);
+
+            return response;
+
+        }).toList();
     }
 
 
