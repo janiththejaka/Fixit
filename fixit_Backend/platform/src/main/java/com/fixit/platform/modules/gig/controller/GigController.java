@@ -124,4 +124,19 @@ public class GigController {
 
         return "Gig deleted successfully";
     }
+
+    @GetMapping("/search")
+    public List<GigCardResponse> searchGigs(
+            @RequestParam(required = false)
+            UUID skillId,
+
+            @RequestParam(required = false)
+            String location
+    ) {
+
+        return gigService.searchGigs(
+                skillId,
+                location
+        );
+    }
 }

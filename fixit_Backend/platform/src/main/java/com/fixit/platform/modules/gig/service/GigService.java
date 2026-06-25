@@ -247,4 +247,16 @@ public class GigService {
 
         gigRepository.delete(gig);
     }
+
+    public List<GigCardResponse> searchGigs(
+            UUID skillId,
+            String location
+    ) {
+        return gigRepository.searchPublicGigs(
+                skillId,
+                location
+        );
+    }
+
+
 }
