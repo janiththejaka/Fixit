@@ -1,6 +1,6 @@
-package com.fixit.platform.modules.service_request.dto;
+package com.fixit.platform.modules.request.dto;
 
-import com.fixit.platform.modules.service_request.dao.RequestStatus;
+import com.fixit.platform.modules.request.entity.ServiceRequestStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +23,7 @@ public class ServiceRequestResponse {
 
     private String description;
 
-    private RequestStatus status;
+    private ServiceRequestStatus status;
 
-    private LocalDate requestedDate;
+    private LocalDate scheduledDate;
 }

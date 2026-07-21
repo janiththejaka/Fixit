@@ -1,5 +1,6 @@
 package com.fixit.platform.modules.gig.service;
 
+import com.fixit.platform.common.exception.UserNotFoundException;
 import com.fixit.platform.common.response.ApiResponse;
 import com.fixit.platform.modules.auth.entity.User;
 import com.fixit.platform.modules.auth.repository.UserRepository;
@@ -109,7 +110,7 @@ public class GigService {
         User user = authUserRepository
                 .findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found")
+                        new UserNotFoundException("User not found")
                 );
 
         Profile profile = profileRepository
