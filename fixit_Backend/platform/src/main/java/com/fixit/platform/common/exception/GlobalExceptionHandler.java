@@ -1,6 +1,9 @@
 package com.fixit.platform.common.exception;
 
 import com.fixit.platform.common.response.ApiResponse;
+import com.fixit.platform.modules.request.exception.InvalidRequestStateException;
+import com.fixit.platform.modules.request.exception.ServiceRequestNotFoundException;
+import com.fixit.platform.modules.request.exception.UnauthorizedRequestActionException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,5 +77,44 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(response);
+    }
+
+    @ExceptionHandler(ServiceRequestNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleServiceRequestNotFound(
+            ServiceRequestNotFoundException ex
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ApiResponse<>(
+                        false,
+                        ex.getMessage(),
+                        null
+                ));
+    }
+
+    @ExceptionHandler(InvalidRequestStateException.class)
+    public ResponseEntity<ApiResponse<?>> handleInvalidRequestState(
+            InvalidRequestStateException ex
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ApiResponse<>(
+                        false,
+                        ex.getMessage(),
+                        null
+                ));
+    }
+
+    @ExceptionHandler(UnauthorizedRequestActionException.class)
+    public ResponseEntity<ApiResponse<?>> handleUnauthorizedRequestAction(
+            UnauthorizedRequestActionException ex
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ApiResponse<>(
+                        false,
+                        ex.getMessage(),
+                        null
+                ));
     }
 }

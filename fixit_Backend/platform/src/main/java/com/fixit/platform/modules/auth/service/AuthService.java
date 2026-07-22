@@ -6,7 +6,6 @@ import com.fixit.platform.common.response.ApiResponse;
 import com.fixit.platform.modules.auth.dto.ClientRegisterRequest;
 import com.fixit.platform.modules.auth.dto.LoginRequest;
 import com.fixit.platform.modules.auth.dto.ProviderRegisterRequest;
-import com.fixit.platform.modules.auth.dto.RegisterRequest;
 import com.fixit.platform.modules.auth.entity.AuthRole;
 import com.fixit.platform.modules.auth.entity.AuthUserRole;
 import com.fixit.platform.modules.auth.entity.User;
