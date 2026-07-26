@@ -15,7 +15,7 @@ import com.fixit.platform.modules.profile.entity.Skill;
 import com.fixit.platform.modules.profile.repository.ProfileRepository;
 import com.fixit.platform.modules.profile.repository.ProviderSkillRepository;
 import com.fixit.platform.modules.profile.repository.SkillRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ import java.util.UUID;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GigService {
 
     private final GigRepository gigRepository;

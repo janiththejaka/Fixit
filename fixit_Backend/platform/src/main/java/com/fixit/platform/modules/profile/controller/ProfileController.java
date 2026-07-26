@@ -5,6 +5,7 @@ import com.fixit.platform.modules.auth.repository.UserRepository;
 import com.fixit.platform.modules.profile.dto.*;
 import com.fixit.platform.modules.profile.service.ProfileService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +15,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/profile")
+@RequiredArgsConstructor
 public class ProfileController {
 
     private final ProfileService profileService;
     private final UserRepository userRepository;
 
-    public ProfileController(
-            ProfileService profileService,
-            UserRepository userRepository
-    ) {
-        this.profileService = profileService;
-        this.userRepository = userRepository;
-    }
 
     @GetMapping("/me")
     public ProfileResponse getMyProfile(Authentication authentication) {

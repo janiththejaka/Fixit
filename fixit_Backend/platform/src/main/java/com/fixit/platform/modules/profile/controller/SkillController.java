@@ -6,6 +6,7 @@ import com.fixit.platform.modules.profile.dto.AddProviderSkillRequest;
 import com.fixit.platform.modules.profile.dto.ProviderSkillResponse;
 import com.fixit.platform.modules.profile.dto.SkillResponse;
 import com.fixit.platform.modules.profile.service.ProfileService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +17,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/skills")
+@RequiredArgsConstructor
 public class SkillController {
 
     private final ProfileService profileService;
     private final UserRepository userRepository;
 
-    public SkillController(ProfileService profileService, UserRepository userRepository) {
-        this.profileService = profileService;
-        this.userRepository = userRepository;
-    }
 
     @GetMapping
     public List<SkillResponse> getSkills() {

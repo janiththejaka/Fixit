@@ -15,6 +15,7 @@ import com.fixit.platform.modules.request.exception.InvalidRequestStateException
 import com.fixit.platform.modules.request.exception.ServiceRequestNotFoundException;
 import com.fixit.platform.modules.request.exception.UnauthorizedRequestActionException;
 import com.fixit.platform.modules.request.repository.ServiceRequestRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,21 +23,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ServiceRequestService {
 
     private final ServiceRequestRepository serviceRequestRepository;
     private final ProfileRepository profileRepository;
     private final GigRepository gigRepository;
 
-    public ServiceRequestService(
-            ServiceRequestRepository serviceRequestRepository,
-            ProfileRepository profileRepository,
-            GigRepository gigRepository
-    ) {
-        this.serviceRequestRepository = serviceRequestRepository;
-        this.profileRepository = profileRepository;
-        this.gigRepository = gigRepository;
-    }
 
     @Transactional
     public ApiResponse<String> createServiceRequest(

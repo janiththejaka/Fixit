@@ -11,14 +11,15 @@ import com.fixit.platform.modules.gig.dto.GigCardResponse;
 import com.fixit.platform.modules.gig.repository.GigRepository;
 
 
-import lombok.AllArgsConstructor;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProfileService {
 
     private final ProfileRepository profileRepository;
@@ -90,9 +91,7 @@ public class ProfileService {
                         request.getBio() == null &&
                         request.getProfileImageUrl() == null
         ) {
-            throw new RuntimeException(
-                    "No fields provided for update"
-            );
+            throw new RuntimeException("No fields provided for update");
         }
 
         Profile updatedProfile = profileRepository.save(profile);

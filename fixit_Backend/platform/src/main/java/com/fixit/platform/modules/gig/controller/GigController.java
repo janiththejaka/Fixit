@@ -9,6 +9,7 @@ import com.fixit.platform.modules.gig.dto.ProviderGigResponse;
 import com.fixit.platform.modules.gig.dto.UpdateGigRequest;
 import com.fixit.platform.modules.gig.service.GigService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -18,15 +19,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/gigs")
+@RequiredArgsConstructor
 public class GigController {
 
     private final GigService gigService;
     private final UserRepository userRepository;
 
-    public GigController(GigService gigService, UserRepository userRepository) {
-        this.gigService = gigService;
-        this.userRepository = userRepository;
-    }
 
     @PreAuthorize("hasRole('PROVIDER')")
     @PostMapping
