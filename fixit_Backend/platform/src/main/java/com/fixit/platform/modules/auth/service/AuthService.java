@@ -2,6 +2,7 @@ package com.fixit.platform.modules.auth.service;
 
 import com.fixit.platform.common.exception.EmailAlreadyExistsException;
 import com.fixit.platform.common.exception.InvalidCredentialsException;
+import com.fixit.platform.common.exception.ResourceNotFoundException;
 import com.fixit.platform.common.response.ApiResponse;
 import com.fixit.platform.modules.auth.dto.ClientRegisterRequest;
 import com.fixit.platform.modules.auth.dto.LoginRequest;
@@ -117,7 +118,7 @@ public class AuthService {
         Skill skill = skillRepository.findById(
                 request.getPrimarySkillId()
         ).orElseThrow(
-                () -> new RuntimeException("Skill not found")
+                () -> new ResourceNotFoundException("Skill Not Found")
         );
 
         ProviderSkill providerSkill =

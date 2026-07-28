@@ -117,4 +117,43 @@ public class GlobalExceptionHandler {
                         null
                 ));
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiResponse<?>> handleConflictException(
+            ConflictException ex
+    ){
+        return  ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ApiResponse<>(
+                        false,
+                        ex.getMessage(),
+                        null
+                ));
+    }
+
+    @ExceptionHandler(ForbiddenOperationException.class)
+    public ResponseEntity<ApiResponse<?>> handleForbiddenOperationException(
+            ForbiddenOperationException ex
+    ){
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ApiResponse<>(
+                        false,
+                        ex.getMessage(),
+                        null
+                ));
+    }
+
+    @ExceptionHandler(BusinessRuleViolationException.class)
+    public ResponseEntity<ApiResponse<?>> handleBusinessRuleViolationException(
+            BusinessRuleViolationException ex
+    ){
+        return ResponseEntity
+                .badRequest()
+                .body(new ApiResponse<>(
+                        false,
+                        ex.getMessage(),
+                        null
+                ));
+    }
 }
