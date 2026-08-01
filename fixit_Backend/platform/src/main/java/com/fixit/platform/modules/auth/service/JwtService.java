@@ -10,6 +10,7 @@ import java.util.Base64;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class JwtService {
@@ -22,15 +23,27 @@ public class JwtService {
                 Base64.getDecoder().decode(secretKey)
         );
     }
-    public String generateToken(String email, List<String> roles) {
+    public String generateToken(UUID userId, String email, List<String> roles) {
 
         return Jwts.builder()
                 .setSubject(email)
+                .claim("userId", userId.toString())
                 .claim("roles", roles)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60))
                 .signWith(getSigningKey())
                 .compact();
+    }
+
+    public UUID extractUserId(String token) {
+        String userId = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId", String.class);
+
+        return UUID.fromString(userId);
     }
 
     public List<String> extractRoles(String token) {
