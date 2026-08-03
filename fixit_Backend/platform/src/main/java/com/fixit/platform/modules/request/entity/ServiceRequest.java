@@ -25,7 +25,14 @@ public class ServiceRequest {
     @Column(name = "provider_profile_id", nullable = false)
     private UUID providerProfileId;
 
-    @Column(name = "gig_id", nullable = false)
+    @Column(name = "skill_id", nullable = false)
+    private UUID skillId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "request_source", nullable = false)
+    private ServiceRequestSource requestSource;
+
+    @Column(name = "gig_id")
     private UUID gigId;
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
