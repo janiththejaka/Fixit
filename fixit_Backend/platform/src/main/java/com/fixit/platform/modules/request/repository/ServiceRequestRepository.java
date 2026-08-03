@@ -39,7 +39,7 @@ public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, 
             r.updatedAt
         )
         FROM ServiceRequest r
-        JOIN Gig g ON g.id = r.gigId
+        LEFT JOIN Gig g ON g.id = r.gigId
         JOIN Profile customer ON customer.id = r.customerProfileId
         JOIN Profile provider ON provider.id = r.providerProfileId
         WHERE r.customerProfileId = :customerProfileId
@@ -66,7 +66,7 @@ public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, 
             r.updatedAt
         )
         FROM ServiceRequest r
-        JOIN Gig g ON g.id = r.gigId
+        LEFT JOIN Gig g ON g.id = r.gigId
         JOIN Profile customer ON customer.id = r.customerProfileId
         JOIN Profile provider ON provider.id = r.providerProfileId
         WHERE r.providerProfileId = :providerProfileId
