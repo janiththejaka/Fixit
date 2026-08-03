@@ -117,9 +117,7 @@ public class AuthService {
 
         Skill skill = skillRepository.findById(
                 request.getPrimarySkillId()
-        ).orElseThrow(
-                () -> new ResourceNotFoundException("Skill Not Found")
-        );
+        ).orElseThrow(() -> new ResourceNotFoundException("Skill Not Found"));
 
         ProviderSkill providerSkill =
                 new ProviderSkill();
@@ -162,7 +160,7 @@ public class AuthService {
                 .map(ur -> roleRepository.findById(ur.getRoleId()).orElseThrow().getName())
                 .toList();
 
-        String token = jwtService.generateToken(user.getEmail(), roles);
+        String token = jwtService.generateToken(user.getId(),user.getEmail(), roles);
 
         return new ApiResponse<>(
                 true,

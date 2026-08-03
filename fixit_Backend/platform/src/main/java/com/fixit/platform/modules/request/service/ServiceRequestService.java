@@ -10,6 +10,7 @@ import com.fixit.platform.modules.request.dto.CreateServiceRequestRequest;
 import com.fixit.platform.modules.request.dto.ServiceRequestResponse;
 import com.fixit.platform.modules.request.entity.RequestAction;
 import com.fixit.platform.modules.request.entity.ServiceRequest;
+import com.fixit.platform.modules.request.entity.ServiceRequestSource;
 import com.fixit.platform.modules.request.entity.ServiceRequestStatus;
 import com.fixit.platform.modules.request.exception.InvalidRequestStateException;
 import com.fixit.platform.modules.request.exception.ServiceRequestNotFoundException;
@@ -101,12 +102,12 @@ public class ServiceRequestService {
         serviceRequest.setCustomerProfileId(customerProfile.getId());
         serviceRequest.setProviderProfileId(providerProfile.getId());
         serviceRequest.setGigId(gig.getId());
-
         serviceRequest.setJobDescription(request.getJobDescription());
         serviceRequest.setServiceLocation(request.getServiceLocation());
         serviceRequest.setScheduledDate(request.getScheduledDate());
-        serviceRequest.setProposedPrice(request.getProposedPrice());
-
+        serviceRequest.setSkillId(gig.getSkill().getId());
+        serviceRequest.setRequestSource(ServiceRequestSource.DIRECT_GIG);
+        serviceRequest.setProposedPrice(gig.getPrice());
         serviceRequest.setAgreedPrice(null);
         serviceRequest.setStatus(ServiceRequestStatus.PENDING);
 

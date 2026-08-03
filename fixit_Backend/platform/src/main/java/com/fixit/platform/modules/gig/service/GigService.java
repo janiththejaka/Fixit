@@ -119,13 +119,11 @@ public class GigService {
                         new RuntimeException("Profile not found")
                 );
 
-        List<Gig> gigs =
-                gigRepository.findByProfileId(profile.getId());
+        List<Gig> gigs = gigRepository.findByProfileId(profile.getId());
 
         return gigs.stream().map(gig -> {
 
-            ProviderGigResponse response =
-                    new ProviderGigResponse();
+            ProviderGigResponse response = new ProviderGigResponse();
 
             response.setId(gig.getId());
             response.setTitle(gig.getTitle());
@@ -160,10 +158,7 @@ public class GigService {
                         ));
 
         Gig gig = gigRepository
-                .findByIdAndProfileId(
-                        gigId,
-                        profile.getId()
-                )
+                .findByIdAndProfileId(gigId, profile.getId())
                 .orElseThrow(() ->
                         new RuntimeException(
                                 "Gig not found"
@@ -249,10 +244,7 @@ public class GigService {
         gigRepository.delete(gig);
     }
 
-    public List<GigCardResponse> searchGigs(
-            UUID skillId,
-            String location
-    ) {
+    public List<GigCardResponse> searchGigs( UUID skillId, String location) {
         return gigRepository.searchPublicGigs(
                 skillId,
                 location
