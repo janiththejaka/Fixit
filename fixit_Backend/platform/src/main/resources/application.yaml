@@ -17,3 +17,14 @@ spring:
 
 jwt:
   secret: AzuoRrtS7H5u4dJK/LKhODI7TXs9NfqX+SAN48EEcLo=
+
+  springdoc:
+    api-docs:
+      path: /v3/api-docs
+
+    swagger-ui:
+      path: /swagger-ui.html
+      operations-sorter: method
+      tags-sorter: alpha
+      persist-authorization: true
+      disable-swagger-default-url: true

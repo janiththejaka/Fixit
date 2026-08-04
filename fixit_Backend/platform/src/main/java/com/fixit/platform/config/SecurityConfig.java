@@ -31,7 +31,11 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/api/skills/**",
                                 "/api/profile/providers",
-                                "/api/profile/providers/{ptofileId}"
+                                "/api/profile/providers/{ptofileId}",
+
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
 
                         ).permitAll()
                         .requestMatchers(
