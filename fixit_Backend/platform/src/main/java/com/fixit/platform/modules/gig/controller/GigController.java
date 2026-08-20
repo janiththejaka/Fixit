@@ -8,6 +8,7 @@ import com.fixit.platform.modules.gig.dto.GigCardResponse;
 import com.fixit.platform.modules.gig.dto.ProviderGigResponse;
 import com.fixit.platform.modules.gig.dto.UpdateGigRequest;
 import com.fixit.platform.modules.gig.service.GigService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
+
+@Tag(
+        name = "Gigs",
+        description = "Gig creation, management, public browsing and search"
+)
 
 @RestController
 @RequestMapping("/api/gigs")

@@ -6,11 +6,17 @@ import com.fixit.platform.modules.auth.dto.LoginRequest;
 import com.fixit.platform.modules.auth.dto.ProviderRegisterRequest;
 import com.fixit.platform.modules.auth.dto.RegisterRequest;
 import com.fixit.platform.modules.auth.service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+@Tag(
+        name = "Authentication",
+        description = "Client/provider registration and login"
+)
 
 @RestController
 @RequestMapping("/api/auth")

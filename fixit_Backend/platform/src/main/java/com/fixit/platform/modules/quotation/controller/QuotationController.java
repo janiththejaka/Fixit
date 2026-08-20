@@ -7,14 +7,19 @@ import com.fixit.platform.modules.quotation.dto.CreateQuotationRequest;
 import com.fixit.platform.modules.quotation.dto.QuotationResponse;
 import com.fixit.platform.modules.quotation.dto.RespondQuotationRequest;
 import com.fixit.platform.modules.quotation.service.QuotationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
+
+@Tag(
+        name = "Quotations",
+        description = "Quotation requests, provider responses and quotation acceptance"
+)
 
 @RestController
 @RequestMapping("/api/quotations")
