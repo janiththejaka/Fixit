@@ -144,28 +144,33 @@ public class AuthService {
 
 
 
-    public ApiResponse<String> login(LoginRequest request) {
+    public String login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // check password
-        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+        if (!passwordEncoder.matches(
+                request.getPassword(),
+                user.getPasswordHash()
+        )) {
             throw new InvalidCredentialsException("Invalid password");
         }
 
         List<AuthUserRole> userRoles = userRoleRepository.findByUserId(user.getId());
 
         List<String> roles = userRoles.stream()
-                .map(ur -> roleRepository.findById(ur.getRoleId()).orElseThrow().getName())
+                .map(ur ->
+                        roleRepository
+                                .findById(ur.getRoleId())
+                                .orElseThrow()
+                                .getName()
+                )
                 .toList();
 
-        String token = jwtService.generateToken(user.getId(),user.getEmail(), roles);
-
-        return new ApiResponse<>(
-                true,
-                "Login successful",
-                token
+        return jwtService.generateToken(
+                user.getId(),
+                user.getEmail(),
+                roles
         );
     }
 }
