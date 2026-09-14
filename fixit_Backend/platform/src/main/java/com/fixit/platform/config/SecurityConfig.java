@@ -24,6 +24,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.disable()) // disable CSRF for APIs
                 .authorizeHttpRequests(auth -> auth
                         // Only public auth endpoints (login & register) are permit-all
@@ -31,7 +32,7 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/api/skills/**",
                                 "/api/profile/providers",
-                                "/api/profile/providers/{ptofileId}",
+                                "/api/profile/providers/{profileId}",
 
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
