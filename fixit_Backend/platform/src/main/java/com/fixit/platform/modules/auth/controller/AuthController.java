@@ -4,7 +4,6 @@ import com.fixit.platform.common.response.ApiResponse;
 import com.fixit.platform.modules.auth.dto.ClientRegisterRequest;
 import com.fixit.platform.modules.auth.dto.LoginRequest;
 import com.fixit.platform.modules.auth.dto.ProviderRegisterRequest;
-import com.fixit.platform.modules.auth.dto.RegisterRequest;
 import com.fixit.platform.modules.auth.service.AuthCookieService;
 import com.fixit.platform.modules.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.*;
 
 @Tag(
@@ -66,6 +65,25 @@ public class AuthController {
                         new ApiResponse<>(
                                 true,
                                 "Login successful",
+                                null
+                        )
+                );
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout() {
+
+        ResponseCookie cookie = authCookieService.clearAccessTokenCookie();
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.SET_COOKIE,
+                        cookie.toString()
+                )
+                .body(
+                        new ApiResponse<>(
+                                true,
+                                "Logout successful",
                                 null
                         )
                 );
