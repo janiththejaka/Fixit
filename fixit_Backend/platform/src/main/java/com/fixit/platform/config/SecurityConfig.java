@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+
+import java.io.IOException;
 
 @Configuration
 @RequiredArgsConstructor
@@ -29,6 +32,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(
                                 CookieCsrfTokenRepository.withHttpOnlyFalse()
+                        )
+                        // Plain handler: cookie value == JSON body token == X-XSRF-TOKEN header value.
+                        // SpaCsrfTokenRequestHandler XOR-masks the JSON body token, causing a
+                        // mismatch with the raw cookie value when tested via Postman or any
+                        // REST client that isn't a browser reading the cookie directly.
+                        .csrfTokenRequestHandler(
+                                new CsrfTokenRequestAttributeHandler()
                         )
                         .ignoringRequestMatchers(
                                 "/api/auth/login",
@@ -84,3 +94,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
+
