@@ -92,6 +92,9 @@ public class AuthController {
 
     @GetMapping("/csrf")
     public CsrfToken csrf(CsrfToken token) {
+        // Force eager resolution so Spring writes the XSRF-TOKEN cookie
+        // to the response. Without this call the deferred token proxy never triggers the Set-Cookie header.
+        token.getToken();
         return token;
     }
 }
