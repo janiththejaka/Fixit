@@ -28,3 +28,13 @@ jwt:
       tags-sorter: alpha
       persist-authorization: true
       disable-swagger-default-url: true
+
+app:
+  auth:
+    cookie-name: fixit_access_token
+    cookie-max-age: 3600
+    cookie-secure: false
+    cookie-same-site: Lax
+
+frontend:
+  origin: http://localhost:5173
