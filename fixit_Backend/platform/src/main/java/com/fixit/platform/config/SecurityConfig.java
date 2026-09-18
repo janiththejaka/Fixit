@@ -12,6 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+
+import java.io.IOException;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,14 +28,30 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable()) // disable CSRF for APIs
+                .cors(cors -> {})
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(
+                                CookieCsrfTokenRepository.withHttpOnlyFalse()
+                        )
+                        // Plain handler: cookie value == JSON body token == X-XSRF-TOKEN header value.
+                        // SpaCsrfTokenRequestHandler XOR-masks the JSON body token, causing a
+                        // mismatch with the raw cookie value when tested via Postman or any
+                        // REST client that isn't a browser reading the cookie directly.
+                        .csrfTokenRequestHandler(
+                                new CsrfTokenRequestAttributeHandler()
+                        )
+                        .ignoringRequestMatchers(
+                                "/api/auth/login",
+                                "/api/auth/register/**"
+                        )
+                )
                 .authorizeHttpRequests(auth -> auth
                         // Only public auth endpoints (login & register) are permit-all
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/skills/**",
                                 "/api/profile/providers",
-                                "/api/profile/providers/{ptofileId}",
+                                "/api/profile/providers/{profileId}",
 
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -74,3 +94,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
+

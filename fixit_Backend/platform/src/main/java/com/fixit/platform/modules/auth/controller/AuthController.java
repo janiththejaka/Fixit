@@ -4,13 +4,22 @@ import com.fixit.platform.common.response.ApiResponse;
 import com.fixit.platform.modules.auth.dto.ClientRegisterRequest;
 import com.fixit.platform.modules.auth.dto.LoginRequest;
 import com.fixit.platform.modules.auth.dto.ProviderRegisterRequest;
-import com.fixit.platform.modules.auth.dto.RegisterRequest;
+import com.fixit.platform.modules.auth.service.AuthCookieService;
 import com.fixit.platform.modules.auth.service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
+
+@Tag(
+        name = "Authentication",
+        description = "Client/provider registration and login"
+)
 
 @RestController
 @RequestMapping("/api/auth")
@@ -18,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final AuthCookieService  authCookieService;
 
 //    @PostMapping("/register")
 //    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
@@ -38,9 +48,53 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<String>> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<Void>> login(
+            @Valid @RequestBody LoginRequest request
+    ) {
 
-        ApiResponse<String> response = authService.login(request);
+        String token = authService.login(request);
 
-        return ResponseEntity.ok(response);    }
+        ResponseCookie cookie =
+                authCookieService.createAccessTokenCookie(token);
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.SET_COOKIE,
+                        cookie.toString()
+                )
+                .body(
+                        new ApiResponse<>(
+                                true,
+                                "Login successful",
+                                null
+                        )
+                );
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout() {
+
+        ResponseCookie cookie = authCookieService.clearAccessTokenCookie();
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.SET_COOKIE,
+                        cookie.toString()
+                )
+                .body(
+                        new ApiResponse<>(
+                                true,
+                                "Logout successful",
+                                null
+                        )
+                );
+    }
+
+    @GetMapping("/csrf")
+    public CsrfToken csrf(CsrfToken token) {
+        // Force eager resolution so Spring writes the XSRF-TOKEN cookie
+        // to the response. Without this call the deferred token proxy never triggers the Set-Cookie header.
+        token.getToken();
+        return token;
+    }
 }

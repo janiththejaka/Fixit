@@ -4,6 +4,7 @@ import com.fixit.platform.modules.auth.entity.User;
 import com.fixit.platform.modules.auth.repository.UserRepository;
 import com.fixit.platform.modules.profile.dto.*;
 import com.fixit.platform.modules.profile.service.ProfileService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
+@Tag(
+        name = "Profiles",
+        description = "User profiles, provider onboarding and provider discovery"
+)
 
 @RestController
 @RequestMapping("/api/profile")

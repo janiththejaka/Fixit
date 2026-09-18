@@ -8,6 +8,7 @@ import com.fixit.platform.modules.request.dto.CreateServiceRequestRequest;
 import com.fixit.platform.modules.request.dto.ServiceRequestResponse;
 import com.fixit.platform.modules.request.dto.UpdateRequestStatusRequest;
 import com.fixit.platform.modules.request.service.ServiceRequestService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
+
+@Tag(
+        name = "Service Requests",
+        description = "Direct service requests and job lifecycle management"
+)
 
 @RestController
 @RequestMapping("/api/requests")
